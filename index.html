@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Backlink Guard — Daily Backlink Monitoring for Indie Makers</title>
+<meta name="description" content="Backlink Guard checks your backlinks every day — still there, still dofollow, page still alive — and alerts you on Telegram and email the moment one changes. $9 a month. Join the waitlist.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Backlink Guard — Launch everywhere. We guard every link.">
+<meta property="og:description" content="Daily backlink checks. Instant alerts. $9 a month. Launching soon — join the waitlist.">
+<meta property="og:site_name" content="Backlink Guard">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Backlink Guard — Launch everywhere. We guard every link.">
+<meta name="twitter:description" content="Daily backlink checks. Instant alerts. $9 a month. Launching soon — join the waitlist.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAFAF7;
+    --ink:#161616;
+    --ink-soft:#4A4A44;
+    --rule:#DDD9CC;
+    --highlight:#FFE600;
+    --green:#0F8A4F;
+    --amber:#B7791F;
+    --red:#C53030;
+    --card:#FFFFFF;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Inter",system-ui,-apple-system,sans-serif;
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 24px}
+  .mono{
+    font-family:"JetBrains Mono",monospace;
+    font-size:12px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+  }
+  mark{
+    background:var(--highlight);
+    color:var(--ink);
+    padding:0 .12em;
+    -webkit-box-decoration-break:clone;
+    box-decoration-break:clone;
+  }
+
+  /* ---------- header ---------- */
+  header{border-bottom:1px solid var(--rule)}
+  .header-in{display:flex;justify-content:space-between;align-items:center;padding:18px 0}
+  .logo{font-family:"Instrument Serif",serif;font-size:22px;letter-spacing:.01em}
+  .logo b{font-weight:400;background:var(--highlight);padding:0 5px}
+  header .mono{color:var(--ink-soft)}
+
+  /* ---------- hero ---------- */
+  .hero{padding:88px 0 64px}
+  .hero .mono{color:var(--ink-soft);margin-bottom:26px}
+  h1{
+    font-family:"Instrument Serif",serif;
+    font-weight:400;
+    font-size:clamp(44px,7.5vw,76px);
+    line-height:1.04;
+    letter-spacing:-.01em;
+    margin-bottom:26px;
+  }
+  .subhead{
+    font-size:clamp(19px,2.6vw,23px);
+    font-weight:500;
+    margin-bottom:20px;
+  }
+  .hero p.lede{color:var(--ink-soft);max-width:560px;margin-bottom:36px}
+
+  /* ---------- waitlist form ---------- */
+  .waitlist-form{display:flex;gap:10px;max-width:520px;flex-wrap:wrap}
+  .waitlist-form input[type="email"]{
+    flex:1 1 260px;
+    font-family:"Inter",sans-serif;
+    font-size:16px;
+    padding:13px 16px;
+    border:1px solid var(--ink);
+    background:var(--card);
+    color:var(--ink);
+    border-radius:0;
+    outline:none;
+  }
+  .waitlist-form input[type="email"]:focus{box-shadow:3px 3px 0 var(--highlight)}
+  .waitlist-form button{
+    font-family:"Inter",sans-serif;
+    font-size:16px;
+    font-weight:600;
+    padding:13px 22px;
+    background:var(--ink);
+    color:var(--paper);
+    border:1px solid var(--ink);
+    border-radius:0;
+    cursor:pointer;
+  }
+  .waitlist-form button:hover{background:#000}
+  .waitlist-form button:disabled{opacity:.55;cursor:default}
+  .form-note{font-size:13.5px;color:var(--ink-soft);margin-top:12px}
+  .form-msg{font-size:15px;margin-top:14px;min-height:24px;font-weight:500}
+  .form-msg.ok{color:var(--green)}
+  .form-msg.err{color:var(--red)}
+
+  /* ---------- report card ---------- */
+  .report-section{padding:8px 0 72px}
+  .report-card{
+    background:var(--card);
+    border:1px solid var(--ink);
+    box-shadow:6px 6px 0 rgba(22,22,22,.08);
+    max-width:640px;
+  }
+  .report-head{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:14px 20px;border-bottom:1px solid var(--rule);
+  }
+  .report-head .mono{color:var(--ink-soft)}
+  .report-row{
+    display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:15px 20px;border-bottom:1px solid var(--rule);
+  }
+  .report-row:last-of-type{border-bottom:none}
+  .report-url{font-size:15px;font-weight:500;word-break:break-all}
+  .report-url span{display:block;font-weight:400;font-size:13px;color:var(--ink-soft)}
+  .status{
+    font-family:"JetBrains Mono",monospace;
+    font-size:12px;letter-spacing:.06em;text-transform:uppercase;
+    white-space:nowrap;
+  }
+  .status::before{content:"●";margin-right:7px;font-size:10px;vertical-align:1px}
+  .status.green{color:var(--green)}
+  .status.amber{color:var(--amber)}
+  .status.red{color:var(--red)}
+  .report-alert{
+    padding:14px 20px;
+    border-top:1px solid var(--ink);
+    background:#FFFDEA;
+    font-size:14.5px;
+  }
+  .report-alert .mono{color:var(--ink-soft);display:block;margin-bottom:3px}
+
+  /* ---------- sections ---------- */
+  section{padding:64px 0;border-top:1px solid var(--rule)}
+  .section-label{color:var(--ink-soft);margin-bottom:34px}
+  h2{
+    font-family:"Instrument Serif",serif;
+    font-weight:400;
+    font-size:clamp(30px,4.5vw,42px);
+    line-height:1.12;
+    margin-bottom:18px;
+  }
+
+  /* steps */
+  .step{display:flex;gap:26px;padding:22px 0;border-top:1px solid var(--rule)}
+  .step:first-of-type{border-top:none;padding-top:6px}
+  .step .num{
+    font-family:"JetBrains Mono",monospace;
+    font-size:14px;padding-top:5px;color:var(--ink-soft);min-width:34px;
+  }
+  .step h3{font-size:18px;font-weight:600;margin-bottom:4px}
+  .step p{color:var(--ink-soft);max-width:560px}
+
+  /* feature rows */
+  .feature{
+    display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:16px 0;border-top:1px solid var(--rule);
+  }
+  .feature:first-of-type{border-top:none;padding-top:6px}
+  .feature p{font-size:17px;font-weight:500}
+  .feature .mono{color:var(--ink-soft);white-space:nowrap}
+
+  /* comparison */
+  .table-scroll{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:15.5px;min-width:520px}
+  th,td{text-align:left;padding:13px 14px;border-bottom:1px solid var(--rule);vertical-align:top}
+  thead th{font-weight:600;border-bottom:1px solid var(--ink)}
+  thead th.us{background:#FFFDEA}
+  tbody td.us{background:#FFFDEA;font-weight:500}
+  tbody th{font-weight:500;color:var(--ink-soft)}
+  .fineprint{font-size:13.5px;color:var(--ink-soft);margin-top:16px;font-style:italic}
+
+  /* pricing */
+  .price-big{
+    font-family:"Instrument Serif",serif;
+    font-size:clamp(56px,9vw,88px);
+    line-height:1;
+  }
+  .price-big small{font-size:.38em;color:var(--ink-soft)}
+  .pricing p{color:var(--ink-soft);max-width:520px;margin-top:16px}
+  .pricing p strong{color:var(--ink);font-weight:600}
+
+  /* faq */
+  .faq-item{padding:20px 0;border-top:1px solid var(--rule)}
+  .faq-item:first-of-type{border-top:none;padding-top:6px}
+  .faq-item h3{font-size:17px;font-weight:600;margin-bottom:5px}
+  .faq-item p{color:var(--ink-soft);max-width:620px}
+
+  /* closing */
+  .closing{padding:80px 0}
+  .closing h2{font-size:clamp(36px,6vw,58px);margin-bottom:22px}
+  .closing .subhead{margin-bottom:34px}
+
+  footer{border-top:1px solid var(--ink);padding:28px 0 40px}
+  .footer-in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  footer p{font-size:13.5px;color:var(--ink-soft)}
+  footer .mono{color:var(--ink-soft)}
+
+  @media (max-width:560px){
+    .hero{padding:56px 0 48px}
+    section{padding:48px 0}
+    .report-row{flex-direction:column;gap:3px}
+    .feature{flex-direction:column;gap:2px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap header-in">
+    <div class="logo">Backlink <b>Guard</b></div>
+    <div class="mono">Launching soon</div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="mono">Backlink monitoring · For indie makers</div>
+    <h1>Launch everywhere.<br>We guard every <mark>link</mark>.</h1>
+    <p class="subhead">Daily checks. Instant alerts. $9 a month.</p>
+    <p class="lede">You earned backlinks launching on Product Hunt, directories, and blogs. They disappear quietly — removed, moved, flipped to nofollow. Backlink Guard watches every one of them, every day, and tells you the moment one changes.</p>
+
+    <form class="waitlist-form" novalidate>
+      <input type="email" name="email" placeholder="you@yourproduct.com" required aria-label="Email address">
+      <button type="submit">Join the waitlist</button>
+    </form>
+    <p class="form-note">Not live yet. Join the waitlist and we email you at launch — early members keep the $9 price locked.</p>
+    <p class="form-msg" role="status" aria-live="polite"></p>
+  </div>
+
+  <!-- SAMPLE REPORT -->
+  <div class="report-section">
+    <div class="report-card">
+      <div class="report-head">
+        <span class="mono">Sample guard report</span>
+        <span class="mono">Today · 09:00</span>
+      </div>
+      <div class="report-row">
+        <div class="report-url">betalist.com/startups/your-tool<span>linking to your homepage</span></div>
+        <div class="status green">Live · dofollow</div>
+      </div>
+      <div class="report-row">
+        <div class="report-url">producthunt.com/posts/your-tool<span>linking to your homepage</span></div>
+        <div class="status amber">Turned nofollow</div>
+      </div>
+      <div class="report-row">
+        <div class="report-url">makerblog.com/your-tool-review<span>page no longer links to you</span></div>
+        <div class="status red">Link removed</div>
+      </div>
+      <div class="report-alert">
+        <span class="mono">Alert sent · Telegram · 09:02</span>
+        Your Product Hunt link just turned nofollow.
+      </div>
+    </div>
+    <p class="form-note" style="margin-top:14px">A sample. Your report covers every page you give us.</p>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <section>
+    <div class="mono section-label">How it works</div>
+    <div class="step">
+      <div class="num">01</div>
+      <div>
+        <h3>Paste the pages that link to you.</h3>
+        <p>Your Product Hunt post, directory listings, guest posts, reviews — the links you worked to earn.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="num">02</div>
+      <div>
+        <h3>We check them every day.</h3>
+        <p>Is the link still there? Still dofollow? Is the page itself still alive? Checked daily, automatically.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="num">03</div>
+      <div>
+        <h3>Get alerted the moment one changes.</h3>
+        <p>A quiet alert on Telegram or email the same day — while you can still do something about it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT WE CATCH -->
+  <section>
+    <div class="mono section-label">What we catch</div>
+    <div class="feature">
+      <p>Link removed or moved</p>
+      <span class="mono">Alert · same day</span>
+    </div>
+    <div class="feature">
+      <p>Dofollow flipped to nofollow</p>
+      <span class="mono">Alert · same day</span>
+    </div>
+    <div class="feature">
+      <p>Page down or deleted</p>
+      <span class="mono">Alert · same day</span>
+    </div>
+    <div class="feature">
+      <p>Anchor text changed</p>
+      <span class="mono">Alert · same day</span>
+    </div>
+    <div class="feature">
+      <p>Alerts on Telegram and email</p>
+      <span class="mono">Your choice</span>
+    </div>
+  </section>
+
+  <!-- COMPARISON -->
+  <section>
+    <div class="mono section-label">Honest comparison</div>
+    <h2>Same watching. Maker price.</h2>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th class="us">Backlink Guard</th>
+            <th>Linkody</th>
+            <th>Monitor Backlinks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Price</th>
+            <td class="us">$9 / month</td>
+            <td>$14.90 / month</td>
+            <td>$25 / month</td>
+          </tr>
+          <tr>
+            <th>Daily checks</th>
+            <td class="us">Yes</td>
+            <td>Yes</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <th>Telegram alerts</th>
+            <td class="us">Yes</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th>Made for indie makers</th>
+            <td class="us">Yes — only makers</td>
+            <td>Agencies &amp; SEOs</td>
+            <td>SEOs</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fineprint">Competitor prices shift often, so verify current pricing on their own sites.</p>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing">
+    <div class="mono section-label">Pricing</div>
+    <div class="price-big">$9<small> / month</small></div>
+    <p>Every link you give us, checked daily. Alerts on Telegram and email. <strong>No charge today</strong> — Backlink Guard is not live yet. Join the waitlist and the $9 launch price is locked in for early members.</p>
+  </section>
+
+  <!-- FAQ -->
+  <section>
+    <div class="mono section-label">Questions</div>
+    <div class="faq-item">
+      <h3>Is it live yet?</h3>
+      <p>Not yet. We're opening a waitlist first. Join it and we'll email you the moment we launch — and early members keep the $9 launch price for good.</p>
+    </div>
+    <div class="faq-item">
+      <h3>How do you check my links?</h3>
+      <p>Once a day we visit each page you gave us and look for your link: whether it's still there, whether it's still dofollow, and whether the page itself is still up.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What counts as a change?</h3>
+      <p>Your link removed or moved, dofollow flipping to nofollow, the anchor text changing, or the page going down or being deleted. Any of those, you hear from us the same day.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Do I need an account to join the waitlist?</h3>
+      <p>No. Just an email. Accounts arrive at launch.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can I cancel anytime?</h3>
+      <p>Yes. It's a plain monthly subscription — cancel whenever, no lock-in, no emails to support.</p>
+    </div>
+  </section>
+
+  <!-- CLOSING CTA -->
+  <div class="closing">
+    <h2>Launch everywhere.<br>We guard every <mark>link</mark>.</h2>
+    <p class="subhead">Daily checks. Instant alerts. $9 a month.</p>
+    <form class="waitlist-form" novalidate>
+      <input type="email" name="email" placeholder="you@yourproduct.com" required aria-label="Email address">
+      <button type="submit">Join the waitlist</button>
+    </form>
+    <p class="form-note">One email at launch. No spam, no list-selling, ever.</p>
+    <p class="form-msg" role="status" aria-live="polite"></p>
+  </div>
+
+</main>
+
+<footer>
+  <div class="wrap footer-in">
+    <p>Backlink Guard — daily backlink monitoring for indie makers.</p>
+    <span class="mono">Launching soon · $9/mo</span>
+  </div>
+</footer>
+
+<script>
+// ============================================================
+//  WAITLIST SETUP — the one thing to change before deploying:
+//  replace the placeholder below with the owner's real inbox.
+//  That address receives every waitlist signup via FormSubmit.
+//  (FormSubmit sends a one-time activation email to that inbox
+//   on the first submission — click it once and the form is live.)
+// ============================================================
+const WAITLIST_EMAIL = "himanshuchauhan020520@gmail.com";
+
+document.querySelectorAll(".waitlist-form").forEach(function (form) {
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var wrap = form.parentElement;
+    var msg = wrap.querySelector(".form-msg");
+    var input = form.querySelector('input[type="email"]');
+    var button = form.querySelector("button");
+    var email = input.value.trim();
+
+    function show(text, cls) {
+      if (msg) { msg.textContent = text; msg.className = "form-msg " + cls; }
+    }
+
+    if (!email || input.validity.typeMismatch) {
+      show("Please enter a valid email address.", "err");
+      input.focus();
+      return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Joining…";
+    show("", "");
+
+    fetch("https://formsubmit.co/ajax/" + WAITLIST_EMAIL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify({
+        email: email,
+        _subject: "New Backlink Guard waitlist signup",
+        _template: "table"
+      })
+    })
+    .then(function (res) {
+      if (!res.ok) throw new Error("request failed");
+      return res.json();
+    })
+    .then(function () {
+      form.reset();
+      button.textContent = "You're in ✓";
+      show("You're in. We'll email you the moment we launch.", "ok");
+    })
+    .catch(function () {
+      button.disabled = false;
+      button.textContent = "Join the waitlist";
+      show("Something went wrong — please check your connection and try again in a moment.", "err");
+    });
+  });
+});
+</script>
+
+</body>
+</html>
